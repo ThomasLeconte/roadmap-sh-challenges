@@ -71,7 +71,7 @@ function handleCommand(args) {
  */
 function validateArgs(args) {
     if(!args || args.length === 0) {
-        throw new Error("You must provide at least one arg")
+        throw new Error(`You must provide at least one arg. \nYou can use "list", "add", "update", "delete", "mark-in-progress" or "mark-done" !`)
     }
 }
 
