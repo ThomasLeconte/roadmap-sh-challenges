@@ -49,7 +49,7 @@ export default class JsonUtils {
     static updateJSONFileData(path, data) {
         fs.writeFile(path, JSON.stringify(data), "utf-8", (err) => {
             if(err) {
-                Logger.error(err.message);
+                throw err;
             }
         })
     }
