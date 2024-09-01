@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import Logger from "../utils/logger.js";
+import Logger from "./Logger.js";
 
 export default class JsonUtils {
     /**
