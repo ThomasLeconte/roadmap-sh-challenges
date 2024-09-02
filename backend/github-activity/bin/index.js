@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import GithubClient from "./github-client.js";
 import { Logger } from "./utils/Logger.js";
+import { groupBy } from "./utils/group-by.js";
 const argv = process.argv.slice(2);
 handleCommand(argv);
 /**
@@ -12,26 +13,18 @@ function handleCommand(args) {
         validateArgs(args);
         const username = args[0];
         GithubClient.fetchUserEvents(username).then((response) => {
-            const eventsByRepo = groupEventsByRepository(response);
+            const eventsByRepo = groupBy("repo.name", response);
             Array.from(eventsByRepo.keys()).forEach(repo => {
                 const eventsOfRepo = eventsByRepo.get(repo);
-                const eventsByType = new Map();
-                eventsOfRepo?.forEach(e => {
-                    if (!eventsByType.has(e.type))
-                        eventsByType.set(e.type, []);
-                    eventsByType.get(e.type)?.push(e);
-                });
+                const eventsByType = groupBy("type", eventsOfRepo);
                 console.log(`# --- ${repo} ---`);
                 Array.from(eventsByType.keys()).forEach(type => {
                     const events = eventsByType.get(type);
                     switch (type) {
+                        case "ReleaseEvent":
+                            console.log(`Published ${events?.length} versions of project`);
                         case "PullRequestEvent":
-                            const eventsByAction = new Map();
-                            events?.forEach(e => {
-                                if (!eventsByAction.has(e.payload.action))
-                                    eventsByAction.set(e.payload.action, []);
-                                eventsByAction.get(e.payload.action)?.push(e);
-                            });
+                            const eventsByAction = groupBy("payload.action", events);
                             Array.from(eventsByAction.keys()).forEach(action => {
                                 console.log(`${action} ${eventsByAction.get(action)?.length} pull requests`);
                             });
@@ -46,18 +39,13 @@ function handleCommand(args) {
                             console.log(`Commented ${events?.length} times on project issues`);
                             break;
                         case "CreateEvent":
-                            const eventsByType = new Map();
-                            events?.forEach(e => {
-                                if (!eventsByType.has(e.payload.ref_type))
-                                    eventsByType.set(e.payload.ref_type, []);
-                                eventsByType.get(e.payload.ref_type)?.push(e);
-                            });
+                            const eventsByType = groupBy("payload.ref_type", events);
                             Array.from(eventsByType.keys()).forEach(ref_type => {
                                 console.log(`Created ${eventsByType.get(ref_type)?.length} ${ref_type}`);
                             });
                             break;
                         case "PushEvent":
-                            console.log(`Pushed ${events?.length} times`);
+                            console.log(`Pushed ${events?.length} time(s)`);
                             break;
                         case "WatchEvent":
                             console.log(`Watching it`);
