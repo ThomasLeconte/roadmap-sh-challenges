@@ -18,7 +18,7 @@ export default class AbstractCommand {
      * @return {Task[]}
      */
     getTasks() {
-        const json = JsonUtils.getJSONFileData(Constants.JSON_PATH);
+        const json = JsonUtils.getJSONFileData(Constants.JSON_PATH_FILE);
         if(!json.tasks) throw new Error("Unrecognized JSON file!");
         return json.tasks.map(t => Task.deserialize(t));
     }
@@ -28,9 +28,9 @@ export default class AbstractCommand {
      * @param {Task[]} newTasks
      */
     updateTasks(newTasks) {
-        const data = JsonUtils.getJSONFileData(Constants.JSON_PATH);
+        const data = JsonUtils.getJSONFileData(Constants.JSON_PATH_FILE);
         data.tasks = newTasks;
-        JsonUtils.updateJSONFileData(Constants.JSON_PATH, data);
+        JsonUtils.updateJSONFileData(Constants.JSON_PATH_FILE, data);
     }
 
     execute() {

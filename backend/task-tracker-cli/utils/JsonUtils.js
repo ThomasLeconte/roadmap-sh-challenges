@@ -16,6 +16,16 @@ export default class JsonUtils {
     }
 
     /**
+     * Create directory if not exists
+     * @param path {string}
+     */
+    static createDirIfNotExists(path) {
+        if (!fs.existsSync(path)) {
+            fs.mkdirSync(path);
+        }
+    }
+
+    /**
      *
      * @param path {string}
      * @param defaultValue {object}

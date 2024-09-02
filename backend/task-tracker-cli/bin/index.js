@@ -19,7 +19,8 @@ handleCommand(argv);
 function handleCommand(args) {
     try {
         validateArgs(args);
-        JsonUtils.createJsonFileIfNotExists(Constants.JSON_PATH, {tasks: []});
+        JsonUtils.createDirIfNotExists(Constants.JSON_PATH_DIR);
+        JsonUtils.createJsonFileIfNotExists(Constants.JSON_PATH_FILE, {tasks: []});
 
 
         switch(args[0]) {
