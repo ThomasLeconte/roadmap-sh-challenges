@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
-import { stringify } from "querystring";
 import GithubClient from "./github-client.js";
-import GithubEvent from "./models/GithubEvent.js";
 import { Logger } from "./utils/Logger.js";
 import { groupBy } from "./utils/group-by.js";
 
@@ -71,21 +69,6 @@ function handleCommand(args: string[]) {
         Logger.error(err.message);
     }
 }
-
-function groupEventsByRepository(events: GithubEvent[]) {
-    const eventsByRepo = new Map<string, GithubEvent[]>();
-
-    events.forEach(e => {
-        if(!eventsByRepo.has(e.repo.name)) {
-            eventsByRepo.set(e.repo.name, []);
-        }
-
-        eventsByRepo.get(e.repo.name)?.push(e);
-    })
-
-    return eventsByRepo;
-}
-
 
 /**
  * @throws {Error} args are not valid.
