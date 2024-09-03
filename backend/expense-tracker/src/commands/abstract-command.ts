@@ -17,7 +17,7 @@ export default abstract class AbstractCommand {
          * Read JSON database file and return serialized Task list.
          * @return {Expense[]}
          */
-        getExpenses() {
+        getExpenses(): Expense[] {
             const json = JsonUtils.getJSONFileData(Constants.JSON_PATH_FILE);
             if(!json.expenses) throw new Error("Unrecognized JSON file!");
             return json.expenses.map((t: any) => Expense.deserialize(t));
@@ -27,11 +27,11 @@ export default abstract class AbstractCommand {
          * Write new expenses into JSON database file.
          * @param {Expense[]} newExpenses
          */
-        updateTasks(newExpenses: Expense[]) {
+        updateExpenses(newExpenses: Expense[]) {
             const data = JsonUtils.getJSONFileData(Constants.JSON_PATH_FILE);
-            data.tasks = newExpenses;
+            data.expenses = newExpenses;
             JsonUtils.updateJSONFileData(Constants.JSON_PATH_FILE, data);
         }
     
-        abstract execute(args: OptionValues): void;
+        abstract execute(...args: any): void;
 }

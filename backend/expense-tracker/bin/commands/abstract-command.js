@@ -19,9 +19,9 @@ export default class AbstractCommand {
      * Write new expenses into JSON database file.
      * @param {Expense[]} newExpenses
      */
-    updateTasks(newExpenses) {
+    updateExpenses(newExpenses) {
         const data = JsonUtils.getJSONFileData(Constants.JSON_PATH_FILE);
-        data.tasks = newExpenses;
+        data.expenses = newExpenses;
         JsonUtils.updateJSONFileData(Constants.JSON_PATH_FILE, data);
     }
 }
