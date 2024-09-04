@@ -1,4 +1,4 @@
-import { OptionValues } from "commander";
+import { Command, OptionValues } from "commander";
 import Expense from "../models/Expense.js";
 import Constants from "../utils/constants.js";
 import JsonUtils from "../utils/json-utils.js";
@@ -33,5 +33,7 @@ export default abstract class AbstractCommand {
             JsonUtils.updateJSONFileData(Constants.JSON_PATH_FILE, data);
         }
     
-        abstract execute(...args: any): void;
+        abstract execute(args: any[]): void;
+
+        abstract setup(): Command;
 }

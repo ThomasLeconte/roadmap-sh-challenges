@@ -1,9 +1,19 @@
-import { OptionValues } from "commander";
+import { Argument, Command, OptionValues } from "commander";
 import AbstractCommand from "./abstract-command.js";
 import Expense from "../models/Expense.js";
 import { Logger } from "../utils/Logger.js";
 
 export default class AddCommand extends AbstractCommand {
+    setup(): Command {
+        return new Command("add")
+        .addArgument(new Argument("description", "description of exepense"))
+        .addArgument(new Argument("amount", "Expense value"))
+        .addArgument(new Argument("[category]", "Expense category"))
+        .action((...args) => {
+            this.execute(args);
+        })
+    }
+
     execute(args: any[]): void {
         try {
             const desc = args[0];

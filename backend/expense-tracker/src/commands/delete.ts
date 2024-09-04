@@ -1,8 +1,16 @@
+import { Argument, Command } from "commander";
 import { Logger } from "../utils/Logger.js";
 import AbstractCommand from "./abstract-command.js";
 
 export default class DeleteCommand extends AbstractCommand {
-    execute(...args: any): void {
+    setup(): Command {
+        return new Command("delete")
+        .addArgument(new Argument("id", "Expense id to delete"))
+        .action((...args) => {
+            this.execute(args);
+        })
+    }
+    execute(args: any[]): void {
         const id = Number.parseInt(args[0]);
 
         if(Number.isNaN(id)) {
