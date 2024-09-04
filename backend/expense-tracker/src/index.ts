@@ -10,6 +10,9 @@ import JsonUtils from "./utils/json-utils.js";
 import { program } from "commander";
 
 try {
+    JsonUtils.createDirIfNotExists(Constants.JSON_PATH_DIR);
+    JsonUtils.createJsonFileIfNotExists(Constants.JSON_PATH_FILE, {expenses: []})
+
     program.addCommand(new AddCommand().setup())
 
     program.addCommand(new ListCommand().setup())
@@ -17,10 +20,6 @@ try {
     program.addCommand(new SummaryCommand().setup())
 
     program.addCommand(new DeleteCommand().setup())
-
-
-    JsonUtils.createDirIfNotExists(Constants.JSON_PATH_DIR);
-    JsonUtils.createJsonFileIfNotExists(Constants.JSON_PATH_FILE, {expenses: []})
 
     program.parse();
 } catch (err: any) {
