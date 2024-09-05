@@ -1,14 +1,24 @@
-import fs from 'fs';
-import Database from './database/Database';
-import User from './models/user';
-import UserRepository from './repository/user-repository';
+import express from 'express';
 
-Database.setup('src/database/db.sqlite', {
-    migrationsPath: 'src/database/migrations'
-}).then(() => {
-    const user = new User(1, 'admin', 'admin', 'admin@admin.com', new Date());
-    new UserRepository().save(user).then((user) => {
-        console.log(user);
+import authRoute from './routes/auth';
+import protectedRoute from './routes/protectedRoute';
+import Database from './database/Database';
+
+//change it with .env or something else
+export const JWT_SECRET = 'SECRET_KEY';
+
+const app = express();
+
+app.use(express.json());
+app.use('/auth', authRoute);
+app.use('/protected', protectedRoute);
+
+app.listen(process.env.PORT || 3000, () => {
+
+    Database.setup('src/database/db.sqlite', {
+        migrationsPath: 'src/database/migrations'
+    }).then(() => {
+        console.log('Server is running on port 3000');
     });
 });
 

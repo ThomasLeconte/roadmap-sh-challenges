@@ -2,10 +2,8 @@
 
 export function Entity() {
   return function (target: any) {
-    target.prototype.deserialize = function () {
-        const instance = new target();
-        Object.assign(instance, this);
-        return instance;
+    target.prototype.deserialize = function (data: any) {
+      Object.assign(this, data);
     };
   };
 }
