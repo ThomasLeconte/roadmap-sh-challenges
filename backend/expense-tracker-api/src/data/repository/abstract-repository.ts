@@ -29,8 +29,8 @@ export default class AbstractRepository <T extends AbstractEntity> {
 
     async findBy(args: { [key: string]: any }): Promise<T[]> {
         return new Promise((resolve, reject) => {
-            const conditions = Object.keys(args).map((key, index) => {
-                return `${key} = ${args[key]}`;
+            const conditions = Object.keys(args).map((key) => {
+                return `${this.toKebabCase(key)} = ${args[key]}`;
             })
 
             Database.instance.get(`SELECT * FROM ${this.tableName} WHERE ${conditions.join(' AND ')}`, (err, rows: any) => {
@@ -46,6 +46,30 @@ export default class AbstractRepository <T extends AbstractEntity> {
                             Object.assign(entity as object, row);
                             return entity;
                         }));
+                    }
+                }
+            });
+        })
+    }
+
+    async findOneBy(args: { [key: string]: any }): Promise<T | null> {
+        return new Promise((resolve, reject) => {
+            const conditions = Object.keys(args).map((key) => {
+                return `${this.toKebabCase(key)} = '${args[key]}'`;
+            })
+            console.log(args, conditions)
+
+            Database.instance.get('SELECT * FROM ' + this.tableName + ' WHERE ' + conditions.join(' AND ') + ' LIMIT 1;', (err, row: any) => {
+                if(err) {
+                    console.error(err);
+                    reject(err);
+                } else {
+                    if(!row) {
+                        resolve(null);
+                    } else {
+                        const entity = new this.entity();
+                        Object.assign(entity as object, row);
+                        resolve(entity);
                     }
                 }
             });
