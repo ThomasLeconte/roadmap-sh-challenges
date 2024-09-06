@@ -34,7 +34,12 @@ export default class Database {
                     Logger.info('[DATABASE] - Running migrations', false);
                     return db.initMigrationsTable().then(() => {
                         return db.runMigrations(options.migrationsPath)?.then(() => {
-                            return db;
+                            return db.getLastMigration().then((lastMigration: any) => {
+                                if(lastMigration) {
+                                    Logger.info(`[DATABASE] - Last migration executed: ${lastMigration.name}`, false);
+                                }
+                                return db;
+                            })
                         });
                     });
                 }  else {
@@ -146,6 +151,21 @@ export default class Database {
                     }
                     Logger.success('[DATABASE] - Migrations table created successfully', false);
                     resolve(true);
+                });
+            });
+        });
+    }
+
+    private getLastMigration() {
+        return new Promise((resolve, reject) => {
+            Database.instance.serialize(() => {
+                Database.instance.get('SELECT name FROM migrations ORDER BY id DESC LIMIT 1', (err: any, row: any) => {
+                    if (err) {
+                        Logger.error('[DATABASE] - Error getting last migration', false);
+                        console.error(err);
+                        reject(err);
+                    }
+                    resolve(row);
                 });
             });
         });
