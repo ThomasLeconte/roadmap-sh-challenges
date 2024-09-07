@@ -1,4 +1,4 @@
-import express from 'express';
+import express, {Request, Response, NextFunction} from 'express';
 
 import authRoute from './routes/auth';
 import protectedRoute from './routes/protectedRoute';

@@ -1,17 +1,19 @@
 import Router from 'express';
-import Database from '../database/Database';
 import { UserRequest } from '../utils/user-request';
-import ExpenseRepository from '../data/repository/expense-repository';
-import Expense from '../data/models/expense';
-import CategoryRepository from '../data/repository/category-repository';
+import ExpenseService from '../service/expense-service';
+import manageError from '../utils/error-manager';
 
 const router = Router();
+const expenseService = new ExpenseService();
 
 router.get('/', async (req, res) => {
-    const items = await new ExpenseRepository()
-        .findBy({ user_id: Number.parseInt((req as UserRequest).userId) });
-
-    res.status(200).json(items);
+    expenseService
+        .getAllByUser(Number.parseInt((req as UserRequest).userId))
+        .then((expenses) => {
+            res.status(200).json(expenses);
+        }).catch((err) => {
+            manageError(err, res);
+        });
 });
 
 router.post('/', async (req, res) => {
@@ -20,19 +22,43 @@ router.post('/', async (req, res) => {
         res.status(400).send('Invalid request');
         return
     }
-    const userId = (req as UserRequest).userId;
+    const userId = Number.parseInt((req as UserRequest).userId);
 
-    const category = await new CategoryRepository().findOneBy({code: categoryCode});
-    if(!category) {
-        res.status(400).send('Invalid category');
-        return;
-    }
-
-    const expense = new Expense(0, Number.parseInt(userId), category.id, amount, description, new Date());
-
-    const result = await new ExpenseRepository().save(expense);
-
-    res.status(201).json(result);
+    expenseService
+        .createExpense(userId, description, amount, categoryCode)
+        .then((expense) => {
+            res.status(201).json(expense);
+        }).catch((err) => {
+            manageError(err, res);
+        });
 })
+
+router.put('/:id', async (req, res) => {
+    const { description, amount, categoryCode } = req.body;
+    if(!description || !amount || !categoryCode) {
+        res.status(400).send('Invalid request');
+        return
+    }
+    const userId = (req as unknown as UserRequest).userId;
+
+    expenseService
+        .updateExpense(Number.parseInt(userId), Number.parseInt(req.params.id), description, amount, categoryCode)
+        .then((expense) => {
+            res.status(200).json(expense);
+        }).catch((err) => {
+            manageError(err, res);
+        });
+});
+
+router.delete('/:id', async (req, res) => {
+    const userId = (req as unknown as UserRequest).userId;
+
+    expenseService.deleteExpense(Number.parseInt(userId), Number.parseInt(req.params.id))
+        .then(() => {
+            res.status(204).send();
+        }).catch((err) => {
+            manageError(err, res);
+        });
+});
 
 export default router;

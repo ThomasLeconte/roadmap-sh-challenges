@@ -17,11 +17,11 @@ export default class AbstractRepository <T extends AbstractEntity> {
                     console.error(err);
                     reject(err);
                 } else {
-                    resolve(rows.map((row: any) => {
-                        const entity = new this.entity();
-                        Object.assign(entity as object, row);
-                        return entity;
-                    }));
+                    if(!rows) {
+                        resolve([]);
+                    } else {
+                        resolve(rows.map((row: any) => this.deserialize(row)));
+                    }
                 }
             });
         });
@@ -33,7 +33,7 @@ export default class AbstractRepository <T extends AbstractEntity> {
                 return `${this.toKebabCase(key)} = ${args[key]}`;
             })
 
-            Database.instance.get(`SELECT * FROM ${this.tableName} WHERE ${conditions.join(' AND ')}`, (err, rows: any) => {
+            Database.instance.all(`SELECT * FROM ${this.tableName} WHERE ${conditions.join(' AND ')}`, (err, rows: any) => {
                 if(err) {
                     console.error(err);
                     reject(err);
@@ -41,11 +41,7 @@ export default class AbstractRepository <T extends AbstractEntity> {
                     if(!rows) {
                         resolve([]);
                     } else {
-                        resolve(rows.map((row: any) => {
-                            const entity = new this.entity();
-                            Object.assign(entity as object, row);
-                            return entity;
-                        }));
+                        resolve(rows.map((row: any) => this.deserialize(row)));
                     }
                 }
             });
@@ -57,7 +53,6 @@ export default class AbstractRepository <T extends AbstractEntity> {
             const conditions = Object.keys(args).map((key) => {
                 return `${this.toKebabCase(key)} = '${args[key]}'`;
             })
-            console.log(args, conditions)
 
             Database.instance.get('SELECT * FROM ' + this.tableName + ' WHERE ' + conditions.join(' AND ') + ' LIMIT 1;', (err, row: any) => {
                 if(err) {
@@ -67,9 +62,7 @@ export default class AbstractRepository <T extends AbstractEntity> {
                     if(!row) {
                         resolve(null);
                     } else {
-                        const entity = new this.entity();
-                        Object.assign(entity as object, row);
-                        resolve(entity);
+                        resolve(this.deserialize(row));
                     }
                 }
             });
@@ -77,11 +70,40 @@ export default class AbstractRepository <T extends AbstractEntity> {
     }
 
     async findById(id: number): Promise<T | null> {
-        return null;
+        return new Promise((resolve, reject) => {
+            Database.instance.get(`SELECT * FROM ${this.tableName} WHERE id = ?`, [id], (err, row: any) => {
+                if(err) {
+                    console.error(err);
+                    reject(err);
+                } else {
+                    if(!row) {
+                        resolve(null);
+                    } else {
+                        resolve(this.deserialize(row));
+                    }
+                }
+            });
+        });
+    }
+
+    deserialize(row: any): T {
+        const entity = new this.entity();
+        Object.keys(row).forEach((key) => {
+            (entity as any)[this.toKamelCase(key)] = row[key];
+        });
+        return entity
     }
 
     toKebabCase(str: string): string {
         return str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1_$2').toLowerCase();
+    }
+
+    toKamelCase(str: string): string {
+        return str.replace(/([-_][a-z])/g, (group) =>
+            group.toUpperCase()
+            .replace('-', '')
+            .replace('_', '')
+        );
     }
 
     async save(entity: T): Promise<T> {
@@ -96,11 +118,11 @@ export default class AbstractRepository <T extends AbstractEntity> {
 
     async create(entity: T): Promise<T> {
         return new Promise((resolve, reject) => {
-            const columns = Object.keys(entity).filter((key) => key !== 'id').map(this.toKebabCase);
+            const columns = Object.keys(entity).filter((key) => key !== 'id');
             const values = columns.map((key) => (entity as any)[key]);
             const placeholders = columns.map(() => '?').join(', ');
 
-            Database.instance.run(`INSERT INTO ${this.tableName} (${columns.join(', ')}) VALUES (${placeholders})`, values, function(err) {
+            Database.instance.run(`INSERT INTO ${this.tableName} (${columns.map(this.toKebabCase).join(', ')}) VALUES (${placeholders})`, values, function(err) {
                 if(err) {
                     console.error(err);
                     reject(err);
@@ -114,7 +136,7 @@ export default class AbstractRepository <T extends AbstractEntity> {
 
     async update(entity: T): Promise<T> {
         return new Promise((resolve, reject) => {
-            const columns = Object.keys(entity).filter((key) => key !== 'id').map(this.toKebabCase);
+            const columns = Object.keys(entity).filter((key) => key !== 'id');
             const values = columns.map((key) => (entity as any)[key]);
             const placeholders = columns.map((key) => `${this.toKebabCase(key)} = ?`).join(', ');
 
