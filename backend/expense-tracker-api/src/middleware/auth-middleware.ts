@@ -13,6 +13,7 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
     try {
         const verified = jwt.verify(token, JWT_SECRET);
         (req as UserRequest).userId = (verified as any).id;
+        (req as UserRequest).username = (verified as any).username;
     } catch(err) {
         res.status(400).send('Invalid token');
     }

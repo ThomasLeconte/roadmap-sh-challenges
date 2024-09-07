@@ -14,7 +14,11 @@ export default class UserRepository extends AbstractRepository<User> {
                     console.error(err);
                     reject(err);
                 } else {
-                    resolve(new User(row.id, row.username, row.password, row.email, row.createdAt));
+                    if(row) {
+                        resolve(this.deserialize(row));
+                    } else {
+                        resolve(null);
+                    }
                 }
             });
         });

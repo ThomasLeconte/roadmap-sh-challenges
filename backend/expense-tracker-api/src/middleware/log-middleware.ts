@@ -6,7 +6,8 @@ export function logMiddleware(req: Request, res: Response, next: NextFunction) {
     res.on('finish', () => {
         const finishDate = new Date();
         const timeDiff = finishDate.getTime() - startDate.getTime();
-        console.log(`[${finishDate.toLocaleDateString()} - ${finishDate.toLocaleTimeString()}] - [${req.method}] ${req.originalUrl} ${res.statusCode} (${timeDiff}ms)`);
+        const potentialUser = (req as any).username ? (req as any).username : 'anonymous';
+        console.log(`[${finishDate.toLocaleDateString()} - ${finishDate.toLocaleTimeString()}] - [${potentialUser}] - [${req.method}] ${req.originalUrl} ${res.statusCode} (${timeDiff}ms)`);
     });
 
     
