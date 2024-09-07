@@ -58,7 +58,9 @@ export default class Database {
             return Promise.resolve([]);
         }
 
-        return Promise.all(fs.readdirSync(dirPath).map((file: string) => {
+        return Promise.all(fs.readdirSync(dirPath)
+        .sort((a, b) => a.localeCompare(b))
+        .map((file: string) => {
             if(!file.endsWith('.sql')) {
                 return;
             }

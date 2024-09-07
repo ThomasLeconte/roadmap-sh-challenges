@@ -5,6 +5,7 @@ import protectedRoute from './routes/protectedRoute';
 import expensesRoute from './routes/expense';
 import Database from './database/Database';
 import { verifyToken } from './middleware/auth-middleware';
+import { logMiddleware } from './middleware/log-middleware';
 
 //change it with .env or something else
 export const JWT_SECRET = 'SECRET_KEY';
@@ -12,6 +13,7 @@ export const JWT_SECRET = 'SECRET_KEY';
 const app = express();
 
 app.use(express.json());
+app.use(logMiddleware);
 app.use('/auth', authRoute);
 app.use('/protected', verifyToken, protectedRoute);
 app.use('/expenses', verifyToken, expensesRoute);

@@ -48,7 +48,6 @@ export default class ExpenseService {
                     periodStart.setDate(now.getDate() - (period * 7));
                 }
                 expenses = expenses.filter((expense) => {
-                    console.log(periodStart, new Date(expense.createdAt));
                     return periodStart >= new Date(expense.createdAt);
                 });
             }
