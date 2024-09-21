@@ -16,3 +16,6 @@ Challenge #4 : [Expense tracker API](https://roadmap.sh/projects/expense-tracker
 
 Challenge #5 : [Proxy caching server CLI](https://roadmap.sh/projects/caching-server)
 > https://github.com/ThomasLeconte/roadmap-sh-challenges/tree/master/backend/proxy-caching-server-cli
+
+Challenge #6 : [E-commerce API](https://roadmap.sh/projects/ecommerce-api)
+> https://github.com/ThomasLeconte/roadmap-sh-challenges/tree/master/backend/ecommerce-api

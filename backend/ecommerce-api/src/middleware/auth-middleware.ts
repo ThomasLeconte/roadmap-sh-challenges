@@ -5,9 +5,13 @@ import { UserRequest } from "../utils/user-request";
 
 
 export function verifyToken(req: Request, res: Response, next: NextFunction) {
-    const token = req.header('Authorization');
+    let token = req.header('Authorization');
     if(!token) {
         return res.status(401).send('Access denied');
+    }
+
+    if(token.startsWith('Bearer ')) {
+        token = token.slice(7, token.length);
     }
 
     try {

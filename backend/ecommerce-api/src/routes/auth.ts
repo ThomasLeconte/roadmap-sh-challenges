@@ -1,33 +1,28 @@
 import express from 'express';
 import { checkRequiredFields } from '../utils/api-utils';
 import AuthService from '../service/auth-service';
-import manageError from '../utils/error-manager';
+import CustomRouter from './router';
 
-const router = express.Router();
+const router = new CustomRouter(express.Router());
 const authService = new AuthService();
 
-router.post('/register', async (req, res) => {
-    const {username, password, email} = req.body;
-    checkRequiredFields(['username', 'password', 'email'], req.body);
 
-    authService.register(username, password, email)
+router.handle('POST', '/register', async (req, res, next) => {
+    const {username, password, email} = req.body;
+    return authService.register(username, password, email)
         .then((user) => {
             res.status(201).json(user);
-        }).catch((err) => {
-            manageError(err, res);
         });
-})
+}, ['username', 'password', 'email']);
 
-router.post('/login', async (req, res) => {
+router.handle('POST', '/login', async (req, res) => {
     const {username, password} = req.body;
     checkRequiredFields(['username', 'password'], req.body);
 
-    authService.login(username, password)
+    return authService.login(username, password)
         .then((token) => {
             res.status(200).send({token});
-        }).catch((err) => {
-            manageError(err, res);
         });
 })
 
-export default router;
+export default router._router;
