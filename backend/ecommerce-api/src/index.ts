@@ -1,7 +1,8 @@
 import express, {Request, Response, NextFunction} from 'express';
 
-import authRoute from './routes/auth';
+import authRoute from './routes/auth-router';
 import productRoute from './routes/product-router';
+import cartRoute from './routes/cart-router';
 import Database from './database/Database';
 import { logMiddleware } from './middleware/log-middleware';
 import manageError from './utils/error-manager';
@@ -28,6 +29,7 @@ app.use(express.json());
 app.use(logMiddleware);
 app.use('/auth', authRoute);
 app.use('/products', verifyToken, productRoute);
+app.use('/cart', verifyToken, cartRoute);
 
 app.listen(process.env.PORT || 3000, () => {
 
@@ -37,4 +39,3 @@ app.listen(process.env.PORT || 3000, () => {
         console.log('Server is running on port 3000');
     });
 });
-

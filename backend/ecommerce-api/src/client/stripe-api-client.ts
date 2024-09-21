@@ -33,7 +33,7 @@ export default class StripeApiClient extends AbstractApiClient {
         }).then(product => {
             console.debug('Product created successfully:', product);
             this.createPrice(product.id, price);
-            
+            return product;
         }).catch(err => {
             console.error('Failed to create product:', err);
         });

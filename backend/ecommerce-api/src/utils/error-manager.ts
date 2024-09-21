@@ -15,6 +15,7 @@ export default function manageError (err: any, res: Response) {
             res.status(400).send(err.message);
             return;
         } else {
+            console.error('Internal server error', err);
             res.status(500).send('Internal server error');
         }
     } else {
