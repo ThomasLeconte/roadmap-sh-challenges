@@ -12,7 +12,7 @@ export default class AbstractRepository <T extends AbstractEntity> {
 
     async findAll(): Promise<T[]> {
         return new Promise((resolve, reject) => {
-            Database.instance.all(`SELECT * FROM ${this.tableName}`, (err, rows) => {
+            Database.instance.all(`SELECT * FROM \`${this.tableName}\``, (err, rows) => {
                 if(err) {
                     console.error(err);
                     reject(err);
@@ -33,7 +33,7 @@ export default class AbstractRepository <T extends AbstractEntity> {
                 return `${this.toKebabCase(key)} = ${args[key]}`;
             })
 
-            Database.instance.all(`SELECT * FROM ${this.tableName} WHERE ${conditions.join(' AND ')}`, (err, rows: any) => {
+            Database.instance.all(`SELECT * FROM \`${this.tableName}\` WHERE ${conditions.join(' AND ')}`, (err, rows: any) => {
                 if(err) {
                     console.error(err);
                     reject(err);
@@ -54,7 +54,7 @@ export default class AbstractRepository <T extends AbstractEntity> {
                 return `${this.toKebabCase(key)} = '${args[key]}'`;
             })
 
-            Database.instance.get('SELECT * FROM ' + this.tableName + ' WHERE ' + conditions.join(' AND ') + ' LIMIT 1;', (err, row: any) => {
+            Database.instance.get('SELECT * FROM ' + `\`${this.tableName}\`` + ' WHERE ' + conditions.join(' AND ') + ' LIMIT 1;', (err, row: any) => {
                 if(err) {
                     console.error(err);
                     reject(err);
@@ -71,7 +71,7 @@ export default class AbstractRepository <T extends AbstractEntity> {
 
     async findById(id: number): Promise<T | null> {
         return new Promise((resolve, reject) => {
-            Database.instance.get(`SELECT * FROM ${this.tableName} WHERE id = ?`, [id], (err, row: any) => {
+            Database.instance.get(`SELECT * FROM \`${this.tableName}\` WHERE id = ?`, [id], (err, row: any) => {
                 if(err) {
                     console.error(err);
                     reject(err);
@@ -122,7 +122,7 @@ export default class AbstractRepository <T extends AbstractEntity> {
             const values = columns.map((key) => (entity as any)[key]);
             const placeholders = columns.map(() => '?').join(', ');
 
-            Database.instance.run(`INSERT INTO ${this.tableName} (${columns.map(this.toKebabCase).join(', ')}) VALUES (${placeholders})`, values, function(err) {
+            Database.instance.run(`INSERT INTO \`${this.tableName}\` (${columns.map(this.toKebabCase).join(', ')}) VALUES (${placeholders})`, values, function(err) {
                 if(err) {
                     console.error(err);
                     reject(err);
@@ -140,7 +140,7 @@ export default class AbstractRepository <T extends AbstractEntity> {
             const values = columns.map((key) => (entity as any)[key]);
             const placeholders = columns.map((key) => `${this.toKebabCase(key)} = ?`).join(', ');
 
-            Database.instance.run(`UPDATE ${this.tableName} SET ${placeholders} WHERE id = ?`, [...values, entity.id], function(err) {
+            Database.instance.run(`UPDATE \`${this.tableName}\` SET ${placeholders} WHERE id = ?`, [...values, entity.id], function(err) {
                 if(err) {
                     console.error(err);
                     reject(err);
@@ -153,7 +153,7 @@ export default class AbstractRepository <T extends AbstractEntity> {
 
     async delete(id: number): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            Database.instance.run(`DELETE FROM ${this.tableName} WHERE id = ?`, [id], function(err) {
+            Database.instance.run(`DELETE FROM \`${this.tableName}\` WHERE id = ?`, [id], function(err) {
                 if(err) {
                     console.error(err);
                     reject(err);

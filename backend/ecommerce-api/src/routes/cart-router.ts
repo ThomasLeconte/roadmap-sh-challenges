@@ -33,4 +33,11 @@ router.handle('DELETE', '/:productId/remove', async (req, res) => {
         });
 });
 
+router.handle('POST', '/checkout', async (req, res) => {
+    const userId = (req as unknown as UserRequest).userId;
+    return cartService.checkout(userId).then((result) => {
+        res.status(200).json(result);
+    })
+});
+
 export default router._router;
