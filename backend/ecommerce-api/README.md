@@ -20,21 +20,3 @@ Register yourself
 > POST - /auth/login  
 
 Login yourself
-
-> GET - /expenses  
-
-Get your expenses
-You can add "period" with by specifying delay and period type (ex: 5M for five past months, or 2W for last two weeks) to filter by creation date
-Or you can add "startDate" or "endDate" to filter by creation date too
-
-> POST - /expenses  
-
-Add an expense
-
-> PUT - /expenses/:id  
-
-Update an expense
-
-> DELETE - /expenses/:id  
-
-Delete an expense

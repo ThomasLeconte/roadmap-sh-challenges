@@ -1,6 +1,7 @@
 import StripeApiClient from "../client/stripe-api-client";
 import Product from "../data/models/product";
 import ProductRepository from "../data/repository/product-repository";
+import QueryBuilder from "../data/repository/query-builder";
 
 export default class ProductService {
     private stripeApiClient: StripeApiClient;
@@ -23,7 +24,11 @@ export default class ProductService {
         if(!query) {
             return this.getProducts();
         } else {
-            return this.productRepository.query(`SELECT * FROM product WHERE name LIKE '%${query}%'`, [], Product);
+            const request = new QueryBuilder('product')
+            .whereLike('name', query)
+            .orderBy('name', 'ASC')
+            .build();
+            return this.productRepository.query(request, [], Product);
         }
     }
 
