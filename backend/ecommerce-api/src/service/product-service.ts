@@ -19,6 +19,14 @@ export default class ProductService {
         return this.stripeApiClient.getProduct(id);
     }
 
+    searchProducts(query: string | undefined) {
+        if(!query) {
+            return this.getProducts();
+        } else {
+            return this.productRepository.query(`SELECT * FROM product WHERE name LIKE '%${query}%'`, [], Product);
+        }
+    }
+
     createProduct(name: string, description: string, price: number) {
         return this.stripeApiClient.createProduct(name, description, price).then((stripeProduct) => {
             return this.productRepository.create(new Product(

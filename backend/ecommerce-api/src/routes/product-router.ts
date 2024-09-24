@@ -12,6 +12,14 @@ router.handle('GET', '/', async (req, res) => {
         });
 });
 
+router.handle('GET', '/search', async (req, res) => {
+    const query = req.query.q?.toString();
+    return productService.searchProducts(query)
+        .then(products => {
+            res.status(200).json(products);
+        });
+});
+
 router.handle('GET', '/:id', async (req, res) => {
     const id = req.params.id;
     return productService.getProduct(id)

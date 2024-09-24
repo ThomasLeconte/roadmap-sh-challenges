@@ -86,28 +86,8 @@ export default class AbstractRepository <T extends AbstractEntity> {
         });
     }
 
-    deserialize(row: any): T {
-        const entity = new this.entity();
-        Object.keys(row).forEach((key) => {
-            (entity as any)[this.toKamelCase(key)] = row[key];
-        });
-        return entity
-    }
-
-    toKebabCase(str: string): string {
-        return str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1_$2').toLowerCase();
-    }
-
-    toKamelCase(str: string): string {
-        return str.replace(/([-_][a-z])/g, (group) =>
-            group.toUpperCase()
-            .replace('-', '')
-            .replace('_', '')
-        );
-    }
-
     async save(entity: T): Promise<T> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             if(entity.id) {
                 resolve(this.update(entity));
             } else {
@@ -122,7 +102,7 @@ export default class AbstractRepository <T extends AbstractEntity> {
             const values = columns.map((key) => (entity as any)[key]);
             const placeholders = columns.map(() => '?').join(', ');
 
-            Database.instance.run(`INSERT INTO \`${this.tableName}\` (${columns.map(this.toKebabCase).join(', ')}) VALUES (${placeholders})`, values, function(err) {
+            Database.instance.run(`INSERT INTO \`${this.tableName}\` (${columns.map(this.toKebabCase).join(', ')}) VALUES (${placeholders})`, values, function(this, err) {
                 if(err) {
                     console.error(err);
                     reject(err);
@@ -162,5 +142,83 @@ export default class AbstractRepository <T extends AbstractEntity> {
                 }
             });
         })
+    }
+
+    async deleteBy(args: { [key: string]: any }): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            const conditions = Object.keys(args).map((key) => {
+                return `${this.toKebabCase(key)} = ${args[key]}`;
+            })
+
+            Database.instance.run(`DELETE FROM \`${this.tableName}\` WHERE ${conditions.join(' AND ')}`, function(err) {
+                if(err) {
+                    console.error(err);
+                    reject(err);
+                } else {
+                    resolve(true);
+                }
+            });
+        })
+    }
+
+    async deleteAll(): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            Database.instance.run(`DELETE FROM \`${this.tableName}\``, function(err) {
+                if(err) {
+                    console.error(err);
+                    reject(err);
+                } else {
+                    resolve(true);
+                }
+            });
+        })
+    }
+
+    async query<R>(sql: string, params: any[] | null = [], clazz: new (...args: any[]) => R): Promise<R[] | undefined> {
+        return new Promise((resolve, reject) => {
+            Database.instance.all(sql, params, (err, rows) => {
+                if(err) {
+                    console.error(err);
+                    reject(err);
+                } else {
+                    if(!rows) {
+                        resolve(undefined)
+                    } else {
+                        resolve(rows.map((row: any) => this._deserialize(row, clazz)));
+                    }
+                }
+            });
+        });
+    }
+
+    // ===================================
+    // UTILS
+    // ===================================
+    toKebabCase(str: string): string {
+        return str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1_$2').toLowerCase();
+    }
+
+    toKamelCase(str: string): string {
+        return str.replace(/([-_][a-z])/g, (group) =>
+            group.toUpperCase()
+            .replace('-', '')
+            .replace('_', '')
+        );
+    }
+
+    deserialize(row: any): T {
+        const entity = new this.entity();
+        Object.keys(row).forEach((key) => {
+            (entity as any)[this.toKamelCase(key)] = row[key];
+        });
+        return entity
+    }
+
+    _deserialize<R>(row: any, clazz: new (...args: any[]) => R): R {
+        const entity = new clazz();
+        Object.keys(row).forEach((key) => {
+            (entity as any)[this.toKamelCase(key)] = row[key];
+        });
+        return entity
     }
 }
