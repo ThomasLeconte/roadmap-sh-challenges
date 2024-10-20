@@ -6,13 +6,13 @@ import { Response } from "express";
 export default function manageError (err: any, res: Response) {
     if(!res.headersSent) {
         if(err instanceof NotFoundError) {
-            res.status(404).send(err.message);
+            res.status(404).json({message: err.message});
             return;
         } else if (err instanceof ForbiddenError) {
-            res.status(403).send(err.message);
+            res.status(403).json({message: err.message});
             return;
         } else if (err instanceof FunctionnalError) {
-            res.status(400).send(err.message);
+            res.status(400).json({message: err.message});
             return;
         } else {
             console.error('Internal server error', err);

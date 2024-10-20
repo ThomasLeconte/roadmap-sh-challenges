@@ -78,9 +78,9 @@ export default class OrderService {
             reservations.push(await this.seatReservationRepository.save(new SeatReservation(0, seat.id, movieSessionId, order.id, new Date())));
         }
 
-        await this.paypalApiClient.createOrder(order, reservations);
+        const paypalOrder = await this.paypalApiClient.createOrder(order, reservations);
 
-        return {order, reservations};
+        return {order, reservations, paypalLink: paypalOrder.links.find((link: any) => link.rel === 'payer-action').href};
     }
 
     async deleteOrder(orderId: number, userId: number) {

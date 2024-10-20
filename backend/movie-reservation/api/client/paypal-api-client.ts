@@ -96,6 +96,7 @@ export default class PaypalApiClient extends AbstractApiClient {
                 return res.json();
             }).then(data => {
                 console.log('Order created:', data);
+                return data;
             }).catch(err => {
                 console.error('Failed to create order:', err);
             })

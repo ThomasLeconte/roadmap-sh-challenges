@@ -1,5 +1,6 @@
-import express, {Request, Response, NextFunction} from 'express';
+require('dotenv').config();
 
+import express, {Request, Response, NextFunction} from 'express';
 import authRoute from './routes/auth-router';
 import Database from './database/Database';
 import { logMiddleware } from './middleware/log-middleware';
@@ -10,12 +11,17 @@ import movieRoomRouter from './routes/movie-room-router';
 import movieSessionRouter from './routes/movie-session-router';
 import orderRouter from './routes/order-router';
 import adminRouter from './routes/admin-router';
-import PaypalApiClient from '../client/paypal-api-client';
+import cors from 'cors';
 
 //change it with .env or something else
 export const JWT_SECRET = 'SECRET_KEY';
 
+// ---------------------------------------------------------------------
+
 const app = express();
+
+//CORS
+app.use(cors());
 
 //handle errors
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {

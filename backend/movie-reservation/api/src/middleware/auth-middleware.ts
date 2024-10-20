@@ -22,7 +22,7 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
 
             next();
         } catch(err) {
-            res.status(400).send('Invalid token');
+            res.status(400).json({message: 'Invalid token'});
         }
     }
 }

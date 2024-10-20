@@ -211,14 +211,6 @@ export default class AbstractRepository <T extends AbstractEntity> {
         Object.keys(row).forEach((key) => {
             (entity as any)[this.toKamelCase(key)] = row[key];
         });
-
-        Object.keys(entity).forEach((key) => {
-            const descriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(entity), key);
-            console.log(entity, descriptor);
-            // if(descriptor && descriptor.get) {
-            //     (entity as any)[key] = descriptor.get();
-            // }
-        });
         return entity
     }
 

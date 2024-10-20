@@ -1,0 +1,24 @@
+meta {
+  name: add movie
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3000/movie
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGVzIjpbIkFETUlOIl0sImlhdCI6MTcyOTE4NjQ0NSwiZXhwIjoxNzI5MTkwMDQ1fQ.BLYJKWbH4tv3FQpbPpLGscXjbg9kRHXUThFIt7BVRMo
+}
+
+body:json {
+  {
+    "title": "Openheimer",
+    "description": "Other film",
+    "duration": 10700000,
+    "releaseDate": "2023-07-20T00:00:00.000Z"
+  }
+}

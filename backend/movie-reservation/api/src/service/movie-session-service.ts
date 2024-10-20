@@ -22,15 +22,33 @@ export default class MovieSessionService {
     }
 
     async getMovieSessions() {
-        return await this.movieSessionRepository.findAll();
+        return await this.movieSessionRepository.findAll()
+            .then(async (movieSessions) => {
+                // @ts-ignore
+                return await Promise.all(movieSessions.map(async (movieSession) => {
+                    return await this.toDto(movieSession);
+                }));
+            });
     }
 
     async getMovieSessionById(id: number) {
-        return await this.movieSessionRepository.findById(id);
+        return await this.movieSessionRepository.findById(id)
+            .then(async (movieSession) => {
+                if(!movieSession)
+                    throw new NotFoundError('Movie session not found');
+
+                return await this.toDto(movieSession);
+            });
     }
 
     async getMovieSessionsByMovieId(movieId: number) {
-        return await this.movieSessionRepository.findBy({movieId});
+        return await this.movieSessionRepository.findBy({movieId})
+            .then(async (movieSessions) => {
+                // @ts-ignore
+                return await Promise.all(movieSessions.map(async (movieSession) => {
+                    return await this.toDto(movieSession);
+                }));
+            });
     }
 
     async createMovieSession(movieId: number, movieRoomId: number, startDate: Date, endDate: Date) {
@@ -159,11 +177,19 @@ export default class MovieSessionService {
             nextDate.setHours(startHour, 0, 0);
         }
 
-        return movieSessions;
+        return movieSessions.map(async (movieSession) => {
+            return await this.toDto(movieSession);
+        });
     }
 
     async getMovieSessionsByRoom(movieRoomId: number) {
-        return await this.movieSessionRepository.findBy({movieRoomId});
+        return await this.movieSessionRepository.findBy({movieRoomId})
+            .then(async (movieSessions) => {
+                // @ts-ignore
+                return await Promise.all(movieSessions.map(async (movieSession) => {
+                    return await this.toDto(movieSession);
+                }));
+            });
     }
 
     async getSeatsAvailability(movieSessionId: number) {
@@ -182,5 +208,29 @@ export default class MovieSessionService {
                 isReserved: !!reservation
             }
         });
+    }
+
+    async getMovieSessionsByDate(movieId: number, date: Date) {
+        console.log(movieId, date)
+        return await this.movieSessionRepository.findByMovieAndDate(movieId, date)
+            .then(async (movieSessions) => {
+                // @ts-ignore
+                return await Promise.all(movieSessions.map(async (movieSession) => {
+                    return await this.toDto(movieSession);
+                }));
+            });
+    }
+
+    async toDto(movieSession: MovieSession) {
+        const movieRoom = await this.movieRoomRepository.findById(movieSession.movieRoomId);
+        const movie = await this.movieRepository.findById(movieSession.movieId);
+
+        return {
+            id: movieSession.id,
+            movie,
+            movieRoom,
+            startDate: movieSession.startDate,
+            endDate: movieSession.endDate
+        }
     }
 }

@@ -1,0 +1,23 @@
+meta {
+  name: init movie sessions
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3000/movie-session/init
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGVzIjpbIkFETUlOIl0sImlhdCI6MTcyOTE4NjQ0NSwiZXhwIjoxNzI5MTkwMDQ1fQ.BLYJKWbH4tv3FQpbPpLGscXjbg9kRHXUThFIt7BVRMo
+}
+
+body:json {
+  {
+    "movieId": 2,
+    "startInterval": "2024-10-01T00:00:00.000Z",
+    "endInterval": "2024-10-15T00:00:00.000Z"
+  }
+}

@@ -33,6 +33,13 @@ router.handle('GET', '/movie/:movieId', async (req, res) => {
         });
 });
 
+router.handle('GET', '/movie/:movieId/date/:date', async (req, res) => {
+    await movieSessionService.getMovieSessionsByDate(Number.parseInt(req.params.movieId), new Date(req.params.date))
+        .then((movieSessions) => {
+            res.json(movieSessions);
+        });
+});
+
 router.handle('POST', '/', async (req, res) => {
     return movieSessionService.createMovieSession(req.body.movieId, req.body.movieRoomId, req.body.startDate, req.body.endDate)
         .then((movieSession) => {
