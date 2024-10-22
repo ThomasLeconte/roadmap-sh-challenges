@@ -10,6 +10,8 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 import {AuthApi} from "../../../api/auth-api";
+import {mapActions} from "pinia";
+import {userStore} from "@/stores/user-store";
 
 export default defineComponent({
   name: `Login`,
@@ -20,12 +22,14 @@ export default defineComponent({
     }
   },
   methods: {
+    ...mapActions(userStore, ["setUser"]),
     login() {
       console.log(this.username, this.password)
       AuthApi.login(this.username, this.password)
           .then((res) => {
             console.log('logged in', res.data)
             localStorage.setItem('token', res.data.token)
+            this.setUser(res.data.user)
             this.$router.push({name: 'home'})
           }).catch((e) => {
         console.error(e)

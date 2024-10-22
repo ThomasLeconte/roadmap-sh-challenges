@@ -1,5 +1,5 @@
 <template>
-  <CartBanner />
+<!--  <CartBanner />-->
   <navbar />
   <router-view/>
 </template>

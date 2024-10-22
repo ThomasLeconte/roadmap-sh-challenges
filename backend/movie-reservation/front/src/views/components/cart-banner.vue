@@ -1,5 +1,5 @@
 <template>
-  <div class="cart" v-if="seatsBySession.size > 0">
+  <div class="cart" v-if="seatsCount() > 0">
     <span>{{seatsCount()}} seats reserved</span>&emsp;
     <span @click="seeMore = !seeMore">⬇️</span>
 
@@ -57,7 +57,8 @@ export default defineComponent({
       this.$router.push({name: 'cart'});
     },
     seatsCount() {
-      return Array.from(this.seatsBySession.values()).reduce((acc, val) => acc + val.length, 0);
+      console.log("cart banner seatscount", this.seatsBySession.map(i => i.seats.length))
+      return this.seatsBySession.map(i => i.seats.length).reduce((a, b) => a + b, 0);
     }
   }
 })

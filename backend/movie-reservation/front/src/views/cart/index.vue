@@ -1,49 +1,44 @@
 <template>
   <div class="cart">
-    <h3>My cart</h3>
+    <h3 class="text-3xl font-bold dark:text-white">My cart</h3>
 
-    <table>
-      <thead>
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg mx-10">
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
         <tr>
-          <th>Movie</th>
-          <th>Session</th>
-          <th>Seats</th>
+          <th scope="col" class="px-6 py-3">
+            Movie
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Session hour
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Seats
+          </th>
         </tr>
-      </thead>
-      <tbody>
-        <tr v-for="([session, seats]) in mappedSeatsBySession" :key="session.id">
-          <td>{{session.movie.title}}</td>
-          <td>{{formatDate(session.startDate)}}</td>
-          <td>{{seats.join(", ")}}</td>
+        </thead>
+        <tbody>
+        <tr v-for="([session, seats]) in mappedSeatsBySession" :key="session.id" class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+          <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            {{session.movie.title}}
+          </th>
+          <td class="px-6 py-4">
+            {{formatDate(session.startDate)}}
+          </td>
+          <td class="px-6 py-4">
+            {{seats.join(", ")}}
+          </td>
         </tr>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
 
     <div style="display: flex; flex-direction: row-reverse">
       <button @click="checkout">Checkout</button>
     </div>
   </div>
+
 </template>
-
-<style scoped>
-  .cart {
-    padding: 10px;
-    border-radius: 10px;
-  }
-
-  table {
-    margin: 10px;
-    width: 100%;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    border-collapse: collapse;
-  }
-
-  th, td {
-    border: 1px solid white;
-    padding: 5px;
-    text-align: left;
-  }
-</style>
 
 <script lang="ts">
 import {defineComponent} from "vue";
@@ -61,13 +56,13 @@ export default defineComponent({
     }
   },
   created() {
-    Array.from(this.seatsBySession.keys())
+    Array.from(this.seatsBySession.map(i => i.sessionId))
         .forEach((sessionId) => {
           console.log('fetch session', sessionId);
           MovieSessionsApi.getSessionById(sessionId)
               .then((res) => {
-                console.log('seat', this.seatsBySession.get(sessionId));
-                this.mappedSeatsBySession.set(res.data, this.seatsBySession.get(sessionId) || []);
+                console.log('seat', this.seatsBySession.find(s => s.sessionId === sessionId)?.seats);
+                this.mappedSeatsBySession.set(res.data, this.seatsBySession.find(s => s.sessionId === sessionId)?.seats || []);
               }).catch((e) => {
                 console.error(e);
               })
@@ -80,7 +75,7 @@ export default defineComponent({
     checkout() {
       Array.from(this.seatsBySession.keys())
           .forEach((sessionId) => {
-            OrderApi.createOrder(sessionId, this.seatsBySession.get(sessionId) || [])
+            OrderApi.createOrder(sessionId, this.seatsBySession.find(s => s.sessionId === sessionId)?.seats || [])
                 .then((res) => {
                   console.log('order created', res.data);
                   window.location.href = res.data.paypalLink;

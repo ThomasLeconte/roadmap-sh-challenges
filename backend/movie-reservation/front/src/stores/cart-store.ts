@@ -2,15 +2,16 @@ import {defineStore} from "pinia";
 
 export const cartStore = defineStore('cart', {
     state: () => ({
-        seatsBySession: new Map<number, string[]>(),
+        seatsBySession: [] as { sessionId: number, seats: string[] }[],
         extras: []
     }),
     actions: {
         addOrDeleteSeatReservation(seatName: string, sessionId: number) {
-            if(!this.seatsBySession.has(sessionId)) {
-                this.seatsBySession.set(sessionId, [seatName]);
+            const seatsOfSession = this.seatsBySession.find(s => s.sessionId === sessionId);
+            if(!seatsOfSession){
+                this.seatsBySession.push({sessionId, seats:[seatName]});
             } else {
-                let actualSeats = this.seatsBySession.get(sessionId) || []
+                let actualSeats = seatsOfSession.seats;
                 if(actualSeats.find(s => s === seatName)){
                     actualSeats = actualSeats.filter(s => s !== seatName);
                 } else {
@@ -18,11 +19,19 @@ export const cartStore = defineStore('cart', {
                 }
 
                 if(actualSeats.length > 0) {
-                    this.seatsBySession.set(sessionId, actualSeats);
+                    seatsOfSession.seats = actualSeats;
                 } else {
-                    this.seatsBySession.delete(sessionId);
+                    this.seatsBySession = this.seatsBySession.filter(s => s.sessionId !== sessionId);
                 }
             }
         },
+    },
+    getters: {
+        seatsCount: (state) => {
+            return state.seatsBySession.map(i => i.seats.length).reduce((a, b) => a + b, 0);
+        }
+    },
+    persist: {
+        storage: sessionStorage
     }
 })
