@@ -1,11 +1,6 @@
 <template>
   <CartBanner />
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> |
-    <router-link to="/login">Login</router-link> |
-    <router-link to="/movies">Movies</router-link>
-  </nav>
+  <navbar />
   <router-view/>
 </template>
 
@@ -33,4 +28,5 @@ nav a.router-link-exact-active {
 </style>
 <script setup lang="ts">
 import CartBanner from "@/views/components/cart-banner.vue";
+import Navbar from "@/components/navbar.vue";
 </script>
