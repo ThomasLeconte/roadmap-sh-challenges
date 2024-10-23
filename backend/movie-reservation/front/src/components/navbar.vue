@@ -46,7 +46,7 @@
           </svg>
           <span class="sr-only">Search</span>
         </button>
-        <div class="relative hidden md:block">
+        <div class="relative hidden md:block mx-2">
           <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
             <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
@@ -63,7 +63,7 @@
         </button>
 
         <!-- SHOP BUTTON -->
-        <button v-if="isAuthenticated" @click="goToCartResume()" type="button" class="relative mx-3 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+        <button v-if="isAuthenticated" @click="goToCartResume()" type="button" class="relative mx-2 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
           <svg class="w-5 h-5 fill-amber-50" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"/>
           </svg>
@@ -71,11 +71,24 @@
         </button>
 
         <!-- PROFILE BUTTON -->
-        <button type="button" class="text-white bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
-          <svg class="w-5 h-5 fill-amber-50" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <path fill-rule="evenodd" d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4h-4Z" clip-rule="evenodd"/>
-          </svg>
-        </button>
+        <show-on-hover>
+          <div>
+            <button type="button" @click="onClickProfile()" class="mx-2 text-white bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+              <svg class="w-5 h-5 fill-amber-50" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4h-4Z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+          </div>
+
+          <template #hover>
+            <button type="button" @click="logout()" class="flex items-center shadow-2xl text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+              <svg class="w-5 h-5 fill-amber-50" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12H4m12 0-4 4m4-4-4-4m3-4h2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-2"/>
+              </svg>
+              Log out
+            </button>
+          </template>
+        </show-on-hover>
       </div>
     </div>
   </nav>
@@ -85,12 +98,30 @@
 import {defineComponent} from "vue";
 import {mapState} from "pinia";
 import {cartStore} from "@/stores/cart-store";
+import ShowOnHover from "@/components/show-on-hover.vue";
 
 export default defineComponent({
   name: `navbar`,
+  components: {ShowOnHover},
+  data(){
+    return {
+      showOnHover: false
+    }
+  },
   methods: {
     goToCartResume() {
       this.$router.push({name: 'cart'});
+    },
+    onClickProfile() {
+      if(this.isAuthenticated) {
+        // this.$router.push({name: 'profile'});
+      } else {
+        this.$router.push({name: 'login'});
+      }
+    },
+    logout(){
+      localStorage.removeItem('token')
+      this.$router.push({name: 'home'})
     }
   },
   computed: {

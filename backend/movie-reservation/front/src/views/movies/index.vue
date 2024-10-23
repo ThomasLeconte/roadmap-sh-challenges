@@ -1,6 +1,5 @@
 <template>
-  <h1>Movies</h1>
-  <div class="movies">
+  <div class="movies mt-6">
     <div v-for="movie in moviesWithSessions" :key="movie.id">
       <MovieCard :movie="movie" />
     </div>
