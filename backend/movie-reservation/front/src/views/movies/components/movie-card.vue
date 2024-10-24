@@ -19,7 +19,7 @@
 
     <div class="flex flex-wrap items-center">
       <span v-if="sessions.length === 0" class="text-gray-700 dark:text-gray-400">No sessions available...</span>
-      <span v-else v-for="session in sessions" :key="session.id" @click="reserve(session.id)" class="hover:cursor-pointer bg-purple-100 text-purple-800 text-lg font-bold m-2 p-2 rounded dark:bg-purple-900 dark:text-purple-300">
+      <span v-else v-for="session in sessions" :key="session.id" @click="reserve(session.id)" class="hover:cursor-pointer bg-purple-100 text-purple-800 text-lg font-bold m-2 p-2 rounded-xl dark:bg-purple-900 dark:text-purple-300">
         {{formatTime(session.startDate)}}
       </span>
     </div>

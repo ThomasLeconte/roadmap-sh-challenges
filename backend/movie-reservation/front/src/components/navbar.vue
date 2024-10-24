@@ -63,7 +63,7 @@
         </button>
 
         <!-- SHOP BUTTON -->
-        <button v-if="isAuthenticated" @click="goToCartResume()" type="button" class="relative mx-2 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+        <button v-if="isLoggedIn" @click="goToCartResume()" type="button" class="relative mx-2 text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
           <svg class="w-5 h-5 fill-amber-50" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"/>
           </svg>
@@ -81,7 +81,7 @@
           </div>
 
           <template #hover>
-            <button type="button" @click="logout()" class="flex items-center shadow-2xl text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
+            <button v-if="isLoggedIn" type="button" @click="logout()" class="flex items-center shadow-2xl text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
               <svg class="w-5 h-5 fill-amber-50" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12H4m12 0-4 4m4-4-4-4m3-4h2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-2"/>
               </svg>
@@ -96,9 +96,10 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import {mapState} from "pinia";
+import {mapActions, mapState} from "pinia";
 import {cartStore} from "@/stores/cart-store";
 import ShowOnHover from "@/components/show-on-hover.vue";
+import {userStore} from "@/stores/user-store";
 
 export default defineComponent({
   name: `navbar`,
@@ -109,26 +110,25 @@ export default defineComponent({
     }
   },
   methods: {
+    ...mapActions(userStore, ["invalidateToken"]),
     goToCartResume() {
       this.$router.push({name: 'cart'});
     },
     onClickProfile() {
-      if(this.isAuthenticated) {
+      if(this.isLoggedIn) {
         // this.$router.push({name: 'profile'});
       } else {
         this.$router.push({name: 'login'});
       }
     },
     logout(){
-      localStorage.removeItem('token')
-      this.$router.push({name: 'home'})
+      this.invalidateToken();
+      window.location.reload();
     }
   },
   computed: {
     ...mapState(cartStore, ["seatsCount"]),
-    isAuthenticated() {
-      return localStorage.getItem(('token')) !== null;
-    }
+    ...mapState(userStore, ["isLoggedIn"])
   }
 })
 </script>
