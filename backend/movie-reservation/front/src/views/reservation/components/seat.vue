@@ -1,5 +1,5 @@
 <template>
-  <div class="seat" :class="[ isReserved ? 'reserved' : null ]" @click="reserve">
+  <div class="seat bg-white border-gray-200 dark:bg-gray-900 transition-shadow shadow-lg hover:shadow-2xl hover:transition-shadow" :class="[ isReserved ? 'reserved' : null ]" @click="reserve">
     {{ name }}
   </div>
 </template>
@@ -18,7 +18,7 @@
 }
 
 .seat.reserved {
-  border: 2px solid pink;
+  border: 2px solid rgba(29 78 216 / 0.5);
 }
 </style>
 

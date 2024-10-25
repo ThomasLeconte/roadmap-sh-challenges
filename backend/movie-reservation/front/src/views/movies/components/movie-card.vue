@@ -53,7 +53,7 @@ export default defineComponent({
   },
   data(){
     return {
-      dateChoosen: new Date().toLocaleString(),
+      dateChoosen: new Date().toISOString().split('T')[0],
       sessions: [] as any[]
     }
   },

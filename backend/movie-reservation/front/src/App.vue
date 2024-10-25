@@ -13,7 +13,13 @@
 }
 
 body {
-  background: #2c3e50;
+  background: #e6f2fb;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #1a202c;
+  }
 }
 
 nav {
