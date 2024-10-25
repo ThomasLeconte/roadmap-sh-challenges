@@ -63,10 +63,8 @@ export default defineComponent({
   created() {
     Array.from(this.seatsBySession.map(i => i.sessionId))
         .forEach((sessionId) => {
-          console.log('fetch session', sessionId);
           MovieSessionsApi.getSessionById(sessionId)
               .then((res) => {
-                console.log('seat', this.seatsBySession.find(s => s.sessionId === sessionId)?.seats);
                 this.mappedSeatsBySession.set(res.data, this.seatsBySession.find(s => s.sessionId === sessionId)?.seats || []);
               }).catch((e) => {
                 console.error(e);

@@ -62,10 +62,8 @@ export default defineComponent({
   },
   methods: {
     fetchSessions() {
-      console.log('fetch sessions', this.movie.movie.id, this.dateChoosen);
       MovieSessionsApi.getMovieSessionsByMovieIdAndDate(this.movie.movie.id, this.dateChoosen.toString())
           .then((res) => {
-            console.log('sessions', res.data);
             this.sessions = res.data;
           }).catch((e) => {
         console.error(e);
@@ -88,7 +86,6 @@ export default defineComponent({
       }
     },
     reserve(sessionId: number) {
-      console.log('reserve', sessionId);
       this.$router.push({name: 'reservation', params: {sessionId}});
     }
   }

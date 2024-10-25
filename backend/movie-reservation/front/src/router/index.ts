@@ -5,6 +5,7 @@ import LoginView from '../views/auth/login.vue'
 import RegisterView from '../views/auth/register.vue'
 import MoviesView from '../views/movies/index.vue'
 import CartView from '../views/cart/index.vue'
+import ProfileView from '../views/profile/index.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -45,6 +46,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/cart',
     name: 'cart',
     component: CartView
+  },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: ProfileView
   }
 ]
 

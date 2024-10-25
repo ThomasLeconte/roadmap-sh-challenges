@@ -58,10 +58,8 @@ export default defineComponent({
   methods: {
     ...mapActions(userStore, ["setUser", "setToken"]),
     login() {
-      console.log(this.username, this.password)
       AuthApi.login(this.username, this.password)
           .then((res) => {
-            console.log('logged in', res.data)
             this.setUser(res.data.user)
             this.setToken(res.data.token)
             this.$router.push({name: 'home'})

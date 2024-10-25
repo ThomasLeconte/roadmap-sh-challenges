@@ -31,11 +31,8 @@ export default defineComponent({
   },
   methods: {
     fetchMovies() {
-      console.log('fetch movies');
       MoviesApi.getMovies()
           .then((res) => {
-            console.log('movies', res.data);
-
             for(const movie of res.data) {
               if(this.moviesWithSessions.filter((m) => m.movie.id === movie.id).length === 0) {
                 this.moviesWithSessions.push({movie, sessions: []});
@@ -47,7 +44,6 @@ export default defineComponent({
               }
               MoviesApi.getMovieSessions(movie.id)
                   .then((res) => {
-                    console.log('sessions', res.data);
                     movieWithSessions.sessions = res.data;
                   }).catch((e) => {
                 console.error(e);

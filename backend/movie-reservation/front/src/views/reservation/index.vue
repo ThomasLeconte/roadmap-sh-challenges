@@ -38,10 +38,8 @@ export default defineComponent({
     }
   },
   created() {
-    console.log('fetch reservation', this.sessionId);
     MovieSessionsApi.getSeatsAvailability(this.sessionId)
         .then((res) => {
-          console.log('seats', res.data);
 
           for(const seat of res.data) {
             let row = this.rows.find(r => r.letter === seat.seat.code[0]);
@@ -62,7 +60,6 @@ export default defineComponent({
   methods: {
     ...mapActions(cartStore, ['addOrDeleteSeatReservation']),
     onUpdateSeatReservation(event: any) {
-      console.log(event);
       this.addOrDeleteSeatReservation(event.name, this.sessionId);
     },
     getSeatReservationState(seat: any){

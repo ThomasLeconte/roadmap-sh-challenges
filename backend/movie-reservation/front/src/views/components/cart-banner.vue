@@ -57,7 +57,6 @@ export default defineComponent({
       this.$router.push({name: 'cart'});
     },
     seatsCount() {
-      console.log("cart banner seatscount", this.seatsBySession.map(i => i.seats.length))
       return this.seatsBySession.map(i => i.seats.length).reduce((a, b) => a + b, 0);
     }
   }

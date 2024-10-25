@@ -23,10 +23,8 @@ export default defineComponent({
   },
   methods: {
     register() {
-      console.log(this.username, this.email, this.password)
       AuthApi.register(this.username, this.email, this.password)
           .then(() => {
-            console.log('registered')
             this.$router.push({name: 'login'})
           }).catch((e) => {
         console.error(e)
