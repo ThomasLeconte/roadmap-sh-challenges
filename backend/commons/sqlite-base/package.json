@@ -1,0 +1,20 @@
+{
+  "name": "sqite-base",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/sqlite-base/index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.2",
+    "typescript": "^5.5.4"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
