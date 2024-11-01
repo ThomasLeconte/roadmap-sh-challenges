@@ -8,7 +8,7 @@ import User from "../data/models/user";
 export function verifyToken(req: Request, res: Response, next: NextFunction) {
     let token = req.header('Authorization');
     if(!token) {
-        return res.status(401).send('Access denied');
+        return res.status(403).send('Access forbidden');
     } else {
         if(token.startsWith('Bearer ')) {
             token = token.slice(7, token.length);
@@ -22,7 +22,7 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
 
             next();
         } catch(err) {
-            res.status(400).json({message: 'Invalid token'});
+            res.status(401).json({message: 'Invalid token'});
         }
     }
 }

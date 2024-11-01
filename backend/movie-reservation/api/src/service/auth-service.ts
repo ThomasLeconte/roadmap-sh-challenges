@@ -14,11 +14,13 @@ export default class AuthService {
     userRepository: UserRepository;
     roleRepository: RoleRepository;
     userRoleRepository: UserRoleRepository;
+    tokenExpiration: string;
 
     constructor() {
         this.userRepository = new UserRepository();
         this.roleRepository = new RoleRepository();
         this.userRoleRepository = new UserRoleRepository();
+        this.tokenExpiration = '1h';
     }
 
     async register(username: string, password: string, email: string) {
@@ -65,15 +67,16 @@ export default class AuthService {
                     throw new FunctionnalError('Invalid username or password');
                 }
 
-                return jwt.sign({id: user.id, username, roles: roles.map(r => r.name)}, JWT_SECRET, { expiresIn: '1h' });
+                return jwt.sign({id: user.id, username, roles: roles.map(r => r.name)}, JWT_SECRET, { expiresIn: this.tokenExpiration });
             });
         });
     }
 
     async refreshToken(token: string) {
-        return Promise.resolve(jwt.verify(token, JWT_SECRET))
+        return Promise.resolve(jwt.verify(token, JWT_SECRET, {ignoreExpiration: true}))
         .then((decoded: any) => {
-            return jwt.sign({id: decoded.id, username: decoded.username}, JWT_SECRET, { expiresIn: '1h' });
-        });
+            return jwt.sign({id: decoded.id, username: decoded.username}, JWT_SECRET, { expiresIn: this.tokenExpiration });
+        }).catch((err) => {
+        })
     }
 }

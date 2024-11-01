@@ -14,6 +14,14 @@ router.handle('GET', '/', async (req, res) => {
         });
 });
 
+router.handle('POST', '/compute', async (req, res) => {
+    const body = req.body;
+    await orderService.computeOrder(body)
+        .then((order) => {
+            res.json(order);
+        });
+});
+
 router.handle('POST', '/', async (req, res) => {
     const userId = (req as UserRequest).userId;
     await orderService.createOrder(req.body.movieSessionId, userId, req.body.seats)

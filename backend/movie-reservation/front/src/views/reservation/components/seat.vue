@@ -1,5 +1,5 @@
 <template>
-  <div class="seat bg-white border-gray-200 dark:bg-gray-900 transition-shadow shadow-lg hover:shadow-2xl hover:transition-shadow" :class="[ isReserved ? 'reserved' : null ]" @click="reserve">
+  <div class="seat bg-white border-gray-200 dark:bg-gray-900 dark:text-gray-300 text-gray-900 transition-shadow shadow-lg hover:shadow-2xl hover:transition-shadow" :class="[ isReserved ? 'reserved' : null ]" @click="reserve">
     {{ name }}
   </div>
 </template>

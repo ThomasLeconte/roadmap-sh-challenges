@@ -6,6 +6,10 @@ export class MoviesApi {
         return axios.get('/movie')
     }
 
+    static async searchMovies(query: string){
+        return axios.get(`/movie?q=${query}`)
+    }
+
     static async getMovieDetails(id: number) {
         return axios.get(`/movie/${id}`)
     }

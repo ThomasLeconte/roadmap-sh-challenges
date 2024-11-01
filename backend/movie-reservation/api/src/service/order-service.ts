@@ -99,4 +99,41 @@ export default class OrderService {
             });
         });
     }
+
+    async computeOrder(body: any) {
+        if(body.sessions.length === 0) {
+            throw new FunctionnalError('No session selected');
+        }
+
+        let pricesPerSession = [];
+
+        for(const session of body.sessions) {
+
+            let pricesOfSession = [] as { type: string, name: string, price: number}[];
+
+            const _session = await this.movieSessionRepository.findById(session.id);
+            if(!_session) {
+                throw new NotFoundError('Session not found');
+            }
+
+            for(const seatCode of session.seats) {
+                const seat = await this.seatRepository.findOneBy({movieRoomId: _session.movieRoomId, code: seatCode});
+                if(!seat) {
+                    throw new NotFoundError('Seat not found');
+                }
+                pricesOfSession.push({type: 'SEAT', name: seat.code, price: 10});
+            }
+
+            // if(_session.is3D) {
+            //     pricesOfSession.push({type: 'TAX', name: '3D', price: 2 * session.seats.length});
+            // }
+            // if(_session.is4DX) {
+            //     pricesOfSession.push({type: 'TAX', name: '4DX', price: 2.5 * session.seats.length});
+            // }
+
+            pricesPerSession.push({sessionId: _session.id, lines: pricesOfSession})
+        }
+
+        return pricesPerSession;
+    }
 }
