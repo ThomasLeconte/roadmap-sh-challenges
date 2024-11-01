@@ -2,7 +2,7 @@ require('dotenv').config();
 
 import express, {Request, Response, NextFunction} from 'express';
 import authRoute from './routes/auth-router';
-import Database from './database/Database';
+import {Database} from 'sqite-base';
 import { logMiddleware } from './middleware/log-middleware';
 import manageError from './utils/error-manager';
 import { adminGuard, verifyToken } from './middleware/auth-middleware';

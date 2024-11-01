@@ -1,5 +1,5 @@
 import MovieRoom from "../models/movie-room";
-import AbstractRepository from "./abstract-repository";
+import {AbstractRepository} from "sqite-base";
 
 export default class MovieRoomRepository extends AbstractRepository<MovieRoom> {
     constructor() {

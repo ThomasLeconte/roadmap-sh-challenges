@@ -1,5 +1,5 @@
 import { Entity } from "../../decorators/entity";
-import AbstractEntity from "./abstract-entity";
+import {AbstractEntity} from "sqite-base";
 
 @Entity()
 export default class User extends AbstractEntity {

@@ -1,5 +1,5 @@
 import MovieSession from "../models/movie-session";
-import AbstractRepository from "./abstract-repository";
+import {AbstractRepository} from "sqite-base";
 
 export default class MovieSessionRepository extends AbstractRepository<MovieSession> {
     constructor() {

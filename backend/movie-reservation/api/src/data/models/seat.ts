@@ -1,4 +1,4 @@
-import AbstractEntity from "./abstract-entity";
+import {AbstractEntity} from "sqite-base";
 
 export default class Seat extends AbstractEntity {
     code: string;

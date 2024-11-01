@@ -1,4 +1,4 @@
-import AbstractEntity from "./abstract-entity";
+import {AbstractEntity} from "sqite-base";
 
 export default class UserRole extends AbstractEntity {
     userId: number;

@@ -1,5 +1,5 @@
 import Role from "../models/role";
-import AbstractRepository from "./abstract-repository";
+import {AbstractRepository} from "sqite-base";
 
 export default class RoleRepository extends AbstractRepository<Role> {
     constructor() {

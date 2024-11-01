@@ -1,6 +1,5 @@
-import Database from "../../database/Database";
 import User from "../models/user";
-import AbstractRepository from "./abstract-repository";
+import {AbstractRepository, Database} from "sqite-base";
 
 export default class UserRepository extends AbstractRepository<User> {
     constructor() {
