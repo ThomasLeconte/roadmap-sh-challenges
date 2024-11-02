@@ -204,11 +204,11 @@ export default class AbstractRepository <T extends AbstractEntity> {
     }
 
     toKamelCase(str: string): string {
-        return str.replace(/([-_][a-z])/g, (group) =>
+        return str.replace(/([-_][a-z0-9])/g, (group) =>
             group.toUpperCase()
-            .replace('-', '')
-            .replace('_', '')
-        );
+                .replace('-', '')
+                .replace('_', '')
+        ).replace(/^([A-Z])/, (group) => group.toLowerCase());
     }
 
     deserialize(row: any): T {

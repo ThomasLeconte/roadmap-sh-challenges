@@ -20,7 +20,7 @@ export default class MovieRoomService {
         return await this.movieRoomRepository.findById(id);
     }
 
-    async createMovieRoom(name: string, capacity: number, rows: number = 10) {
+    async createMovieRoom(name: string, capacity: number, rows: number = 10, is3d: boolean = false, is4dx: boolean = false, isImax: boolean = false, isDbox: boolean = false) {
         if(!name) {
             throw new Error('Name is required');
         }
@@ -41,7 +41,7 @@ export default class MovieRoomService {
             throw new Error('Rows must be less than 26');
         }
 
-        const movieRoom = await this.movieRoomRepository.save(new MovieRoom(0, name, capacity, new Date()));
+        const movieRoom = await this.movieRoomRepository.save(new MovieRoom(0, name, capacity, is3d, is4dx, isImax, isDbox, new Date()));
 
         const rowNames = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
         const seatsPerRow = Math.floor(capacity / rows);
@@ -60,9 +60,8 @@ export default class MovieRoomService {
     }
 
     async updateMovieRoom(id: number, name: string, capacity: number) {
-        const movieRoom = new MovieRoom(id, name, capacity, new Date());
-
-        return await this.movieRoomRepository.update(movieRoom);
+        // const movieRoom = new MovieRoom(id, name, capacity, new Date());
+        // return await this.movieRoomRepository.update(movieRoom);
     }
 
     async deleteMovieRoom(id: number) {
