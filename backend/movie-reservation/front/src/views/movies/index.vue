@@ -9,7 +9,8 @@
 <style scoped>
   .movies {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 </style>
 

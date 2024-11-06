@@ -62,20 +62,22 @@
 
     <div class="w-1/4 p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
       <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Resume</h5>
-      <div v-for="(session, index) in computedOrder.pricesPerSession" :key="index">
-        <p class="text-lg text-left font-bold text-gray-900 dark:text-white">{{getSessionTitle(session.sessionId)}}</p>
-        <div v-for="(line, _index) in session.lines" :key="_index" class="ml-5">
-          <div v-if="line.type == 'SEAT'" class="flex items-center justify-between">
-            <span class="text-base text-gray-900 dark:text-white">{{ line.name }}</span>
-            <span class="text-base font-bold text-gray-900 dark:text-white">{{ line.price }} $</span>
+      <template v-if="computedOrder">
+        <div v-for="(session, index) in computedOrder.pricesPerSession" :key="index">
+          <p class="text-lg text-left font-bold text-gray-900 dark:text-white">{{getSessionTitle(session.sessionId)}}</p>
+          <div v-for="(line, _index) in session.lines" :key="_index" class="ml-5">
+            <div v-if="line.type == 'SEAT'" class="flex items-center justify-between">
+              <span class="text-base text-gray-900 dark:text-white">{{ line.name }}</span>
+              <span class="text-base font-bold text-gray-900 dark:text-white">{{ line.price }} $</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="mt-2 flex items-center justify-between">
-        <span class="text-lg font-bold text-gray-900 dark:text-white">Total</span>
-        <span class="text-lg font-bold text-gray-900 dark:text-white">{{computedOrder ? computedOrder.totalPrice : 0}} $</span>
-      </div>
+        <div class="mt-2 flex items-center justify-between">
+          <span class="text-lg font-bold text-gray-900 dark:text-white">Total</span>
+          <span class="text-lg font-bold text-gray-900 dark:text-white">{{computedOrder ? computedOrder.totalPrice : 0}} $</span>
+        </div>
+      </template>
 
       <template v-if="taxesLines.length > 0">
         <hr class="my-5" />

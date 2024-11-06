@@ -1,5 +1,5 @@
 <template>
-  <div class="movie max-w-sm p-6 mx-3 bg-white border border-gray-200 rounded-xl shadow-2xl dark:bg-gray-800 dark:border-gray-700">
+  <div class="movie max-w-sm p-6 m-3 bg-white border border-gray-200 rounded-xl shadow-2xl dark:bg-gray-800 dark:border-gray-700">
     <div class="flex items-center justify-between">
       <h5 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{movie.movie.title}}</h5>
       <span class="bg-blue-100 text-blue-800 font-medium inline-flex items-center px-2.5 py-0.5 rounded-lg dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
@@ -11,6 +11,7 @@
     </div>
     <p class="mb-10 text-left font-normal text-gray-700 dark:text-gray-400">{{movie.movie.description}}</p>
 
+    <img :src="movie.movie.image" alt="movie" class="mb-5 w-full h-48 object-cover rounded-lg" />
 
     <div class="flex items-center justify-between mb-2">
       <h5 class="text-left font-bold tracking-tight text-gray-900 dark:text-white">Sessions</h5>
